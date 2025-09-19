@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GestionViajes.API</name>
+    </assembly>
+    <members>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.GetDestinos">
+            <summary>
+            Obtiene todos los destinos turísticos
+            </summary>
+            <returns>Lista de destinos</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.GetDestino(System.Int32)">
+            <summary>
+            Obtiene un destino específico por su ID
+            </summary>
+            <param name="id">ID del destino</param>
+            <returns>Destino encontrado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.GetDestinosByPais(System.String)">
+            <summary>
+            Obtiene destinos por país
+            </summary>
+            <param name="pais">Nombre del país</param>
+            <returns>Lista de destinos del país especificado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.GetDestinosByCostRange(System.Decimal,System.Decimal)">
+            <summary>
+            Obtiene destinos dentro de un rango de costo
+            </summary>
+            <param name="minCost">Costo mínimo</param>
+            <param name="maxCost">Costo máximo</param>
+            <returns>Lista de destinos dentro del rango de precio</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.SearchDestinos(System.String)">
+            <summary>
+            Busca destinos por término de búsqueda
+            </summary>
+            <param name="searchTerm">Término de búsqueda</param>
+            <returns>Lista de destinos que coinciden con el término</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.CreateDestino(GestionViajes.API.DTOs.DestinoCreateDto)">
+            <summary>
+            Crea un nuevo destino turístico
+            </summary>
+            <param name="destinoCreateDto">Datos del destino a crear</param>
+            <returns>Destino creado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.UpdateDestino(System.Int32,GestionViajes.API.DTOs.DestinoUpdateDto)">
+            <summary>
+            Actualiza un destino existente
+            </summary>
+            <param name="id">ID del destino a actualizar</param>
+            <param name="destinoUpdateDto">Datos actualizados del destino</param>
+            <returns>Destino actualizado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.DeleteDestino(System.Int32)">
+            <summary>
+            Elimina un destino específico
+            </summary>
+            <param name="id">ID del destino a eliminar</param>
+            <returns>Resultado de la operación</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.DestinosController.DestinoExists(System.Int32)">
+            <summary>
+            Verifica si existe un destino con el ID especificado
+            </summary>
+            <param name="id">ID del destino</param>
+            <returns>True si existe, false en caso contrario</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.GetTuristas">
+            <summary>
+            Obtiene todos los turistas registrados
+            </summary>
+            <returns>Lista de turistas</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.GetTurista(System.Int32)">
+            <summary>
+            Obtiene un turista específico por su ID
+            </summary>
+            <param name="id">ID del turista</param>
+            <returns>Turista encontrado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.GetTuristaByEmail(System.String)">
+            <summary>
+            Obtiene un turista por su email
+            </summary>
+            <param name="email">Email del turista</param>
+            <returns>Turista encontrado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.SearchTuristas(System.String)">
+            <summary>
+            Busca turistas por término de búsqueda
+            </summary>
+            <param name="searchTerm">Término de búsqueda</param>
+            <returns>Lista de turistas que coinciden con el término</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.CreateTurista(GestionViajes.API.DTOs.TuristaCreateDto)">
+            <summary>
+            Crea un nuevo turista
+            </summary>
+            <param name="turistaCreateDto">Datos del turista a crear</param>
+            <returns>Turista creado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.UpdateTurista(System.Int32,GestionViajes.API.DTOs.TuristaUpdateDto)">
+            <summary>
+            Actualiza un turista existente
+            </summary>
+            <param name="id">ID del turista a actualizar</param>
+            <param name="turistaUpdateDto">Datos actualizados del turista</param>
+            <returns>Turista actualizado</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.DeleteTurista(System.Int32)">
+            <summary>
+            Elimina un turista específico
+            </summary>
+            <param name="id">ID del turista a eliminar</param>
+            <returns>Resultado de la operación</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.TuristaExists(System.Int32)">
+            <summary>
+            Verifica si existe un turista con el ID especificado
+            </summary>
+            <param name="id">ID del turista</param>
+            <returns>True si existe, false en caso contrario</returns>
+        </member>
+        <member name="M:GestionViajes.API.Controllers.TuristasController.TuristaExistsByEmail(System.String)">
+            <summary>
+            Verifica si existe un turista con el email especificado
+            </summary>
+            <param name="email">Email del turista</param>
+            <returns>True si existe, false en caso contrario</returns>
+        </member>
+        <member name="T:GestionViajes.API.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:GestionViajes.API.Migrations.InitialCreateFixed">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreateFixed.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreateFixed.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.InitialCreateFixed.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -16,10 +16,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register repositories
 builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
 builder.Services.AddScoped<ITuristaRepository, TuristaRepository>();
+builder.Services.AddScoped<IReservaRepository, ReservaRepository>();
 
 // Register services
 builder.Services.AddScoped<IDestinoService, DestinoService>();
 builder.Services.AddScoped<ITuristaService, TuristaService>();
+builder.Services.AddScoped<IReservaService, ReservaService>();
 
 builder.Services.AddControllers();
 

@@ -155,5 +155,17 @@
         <member name="M:GestionViajes.API.Migrations.InitialCreateFixed.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:GestionViajes.API.Migrations.AddReservas">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.AddReservas.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.AddReservas.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:GestionViajes.API.Migrations.AddReservas.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

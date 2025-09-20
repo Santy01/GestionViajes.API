@@ -11,6 +11,7 @@ namespace GestionViajes.API.Data
 
         public DbSet<Destino> Destinos { get; set; }
         public DbSet<Turista> Turistas { get; set; }
+        public DbSet<Reserva> Reservas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,33 @@ namespace GestionViajes.API.Data
                 
                 // Índices para mejorar búsquedas
                 entity.HasIndex(e => e.Apellido);
+            });
+
+            // Configuración para Reserva
+            modelBuilder.Entity<Reserva>(entity =>
+            {
+                entity.HasKey(e => e.ReservaId);
+                entity.Property(e => e.CantidadPersonas).HasDefaultValue(1);
+                entity.Property(e => e.Total).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.FechaCreacion).HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasOne(e => e.Turista)
+                      .WithMany()
+                      .HasForeignKey(e => e.TuristaId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Destino)
+                      .WithMany()
+                      .HasForeignKey(e => e.DestinoId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Índices para consultas comunes
+                entity.HasIndex(e => e.TuristaId);
+                entity.HasIndex(e => e.DestinoId);
+                entity.HasIndex(e => new { e.FechaInicio, e.FechaFin });
+
+                // Check constraint para validar rango de fechas (solo SQL Server)
+                entity.ToTable(tb => tb.HasCheckConstraint("CK_Reserva_Fechas", "FechaFin > FechaInicio"));
             });
 
             // Datos semilla (seed data)
@@ -151,6 +179,32 @@ namespace GestionViajes.API.Data
                     FechaRegistro = new DateTime(2024, 2, 5, 0, 0, 0, DateTimeKind.Utc)
                 }
             );
+
+            // Datos iniciales para Reservas (coherentes con Turistas y Destinos existentes)
+            modelBuilder.Entity<Reserva>().HasData(
+                new Reserva
+                {
+                    ReservaId = 1,
+                    TuristaId = 1,
+                    DestinoId = 1,
+                    FechaInicio = new DateTime(2024, 3, 10, 0, 0, 0, DateTimeKind.Utc),
+                    FechaFin = new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Utc),
+                    CantidadPersonas = 2,
+                    Total = 500.00m,
+                    FechaCreacion = new DateTime(2024, 2, 10, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new Reserva
+                {
+                    ReservaId = 2,
+                    TuristaId = 2,
+                    DestinoId = 3,
+                    FechaInicio = new DateTime(2024, 4, 5, 0, 0, 0, DateTimeKind.Utc),
+                    FechaFin = new DateTime(2024, 4, 8, 0, 0, 0, DateTimeKind.Utc),
+                    CantidadPersonas = 1,
+                    Total = 150.00m,
+                    FechaCreacion = new DateTime(2024, 2, 20, 0, 0, 0, DateTimeKind.Utc)
+                }
+            );
         }
 
         public override int SaveChanges()
@@ -168,7 +222,7 @@ namespace GestionViajes.API.Data
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is Destino || e.Entity is Turista)
+                .Where(e => e.Entity is Destino || e.Entity is Turista || e.Entity is Reserva)
                 .Where(e => e.State == EntityState.Modified);
 
             foreach (var entry in entries)
@@ -180,6 +234,10 @@ namespace GestionViajes.API.Data
                 else if (entry.Entity is Turista turista)
                 {
                     turista.FechaActualizacion = DateTime.UtcNow;
+                }
+                else if (entry.Entity is Reserva reserva)
+                {
+                    reserva.FechaActualizacion = DateTime.UtcNow;
                 }
             }
         }

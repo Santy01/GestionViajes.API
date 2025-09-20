@@ -1,0 +1,202 @@
+API de Reservas - Documentación para Consumo Frontend
+Fecha: 2025-09-19
+Base URL (relativa): /api/Reservas
+Notas:
+- Todas las respuestas son JSON.
+- Fechas en formato ISO 8601 (YYYY-MM-DD o YYYY-MM-DDTHH:mm:ssZ).
+- No requiere autenticación (según estado actual del proyecto).
+
+========================================
+Modelos (payloads)
+========================================
+ReservaDto (respuesta):
+{
+  "reservaId": number,
+  "turistaId": number,
+  "destinoId": number,
+  "fechaInicio": string,  // "2024-03-10"
+  "fechaFin": string,     // "2024-03-15"
+  "cantidadPersonas": number,
+  "total": number,        // decimal
+  "fechaCreacion": string,
+  "fechaActualizacion": string | null
+}
+
+ReservaCreateDto (request POST):
+{
+  "turistaId": number,
+  "destinoId": number,
+  "fechaInicio": string,   // ISO 8601
+  "fechaFin": string,      // ISO 8601 (debe ser > fechaInicio)
+  "cantidadPersonas": number // >= 1
+}
+
+ReservaUpdateDto (request PUT):
+{
+  "fechaInicio": string,   // ISO 8601
+  "fechaFin": string,      // ISO 8601 (debe ser > fechaInicio)
+  "cantidadPersonas": number // >= 1
+}
+
+Reglas y validaciones:
+- fechaFin > fechaInicio (regla de negocio y constraint en BD).
+- cantidadPersonas >= 1.
+- turistaId y destinoId deben existir.
+- No se permiten reservas solapadas para el mismo turista.
+- Total se calcula en backend: costoDestino * cantidadPersonas * dias (mín. 1 día).
+
+Códigos de estado comunes:
+- 200 OK: Operación exitosa (GET/PUT).
+- 201 Created: Creación satisfactoria (POST).
+- 204 No Content: Eliminación exitosa (DELETE).
+- 400 Bad Request: Validaciones fallidas (fechas, datos incompletos o inválidos).
+- 404 Not Found: Recurso no encontrado.
+- 409 Conflict: Solape de reservas u otros conflictos de negocio.
+- 500 Internal Server Error: Error inesperado.
+
+========================================
+Endpoints
+========================================
+1) Listar reservas
+- Método: GET
+- URL: /api/Reservas
+- Query: (ninguno)
+- Respuesta 200 (array de ReservaDto):
+[
+  {
+    "reservaId": 1,
+    "turistaId": 1,
+    "destinoId": 1,
+    "fechaInicio": "2024-03-10",
+    "fechaFin": "2024-03-15",
+    "cantidadPersonas": 2,
+    "total": 500.00,
+    "fechaCreacion": "2024-02-10T00:00:00Z",
+    "fechaActualizacion": null
+  }
+]
+
+2) Obtener reserva por ID
+- Método: GET
+- URL: /api/Reservas/{id}
+- Path params: id (number)
+- Respuesta 200: ReservaDto
+- Respuesta 404: Not Found
+
+3) Listar reservas por Turista
+- Método: GET
+- URL: /api/Reservas/turista/{turistaId}
+- Path params: turistaId (number)
+- Respuesta 200: array de ReservaDto
+
+4) Listar reservas por Destino
+- Método: GET
+- URL: /api/Reservas/destino/{destinoId}
+- Path params: destinoId (number)
+- Respuesta 200: array de ReservaDto
+
+5) Listar por rango de fechas
+- Método: GET
+- URL: /api/Reservas/rango-fechas?desde=YYYY-MM-DD&hasta=YYYY-MM-DD
+- Query params:
+  - desde (string, requerido)
+  - hasta (string, requerido)  // debe ser > desde
+- Respuesta 200: array de ReservaDto
+- Respuesta 400: "El rango de fechas no es válido"
+
+6) Crear reserva
+- Método: POST
+- URL: /api/Reservas
+- Headers: Content-Type: application/json
+- Body (ReservaCreateDto):
+{
+  "turistaId": 1,
+  "destinoId": 1,
+  "fechaInicio": "2024-03-10",
+  "fechaFin": "2024-03-15",
+  "cantidadPersonas": 2
+}
+- Respuesta 201: ReservaDto creada
+- Respuesta 400: Validación fallida (fechas, campos)
+- Respuesta 409: Conflicto (solape de reservas o FKs inexistentes)
+
+7) Actualizar reserva
+- Método: PUT
+- URL: /api/Reservas/{id}
+- Path params: id (number)
+- Headers: Content-Type: application/json
+- Body (ReservaUpdateDto):
+{
+  "fechaInicio": "2024-04-05",
+  "fechaFin": "2024-04-08",
+  "cantidadPersonas": 3
+}
+- Respuesta 200: ReservaDto actualizada
+- Respuesta 400: Validación fallida
+- Respuesta 404: No encontrada
+- Respuesta 409: Conflicto (solape)
+
+8) Eliminar reserva
+- Método: DELETE
+- URL: /api/Reservas/{id}
+- Respuesta 204: No Content
+- Respuesta 404: No encontrada
+
+9) Verificar existencia (HEAD)
+- Método: HEAD
+- URL: /api/Reservas/{id}
+- Respuesta 200: Existe
+- Respuesta 404: No existe
+
+========================================
+Ejemplos rápidos (curl)
+========================================
+# Listar todas
+curl -X GET "http://localhost:PORT/api/Reservas"
+
+# Obtener por id
+curl -X GET "http://localhost:PORT/api/Reservas/1"
+
+# Crear
+curl -X POST "http://localhost:PORT/api/Reservas" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "turistaId": 1,
+    "destinoId": 1,
+    "fechaInicio": "2024-03-10",
+    "fechaFin": "2024-03-15",
+    "cantidadPersonas": 2
+  }'
+
+# Actualizar
+curl -X PUT "http://localhost:PORT/api/Reservas/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fechaInicio": "2024-04-05",
+    "fechaFin": "2024-04-08",
+    "cantidadPersonas": 3
+  }'
+
+# Eliminar
+curl -X DELETE "http://localhost:PORT/api/Reservas/1"
+
+========================================
+Errores comunes (mensajes orientativos)
+========================================
+- 400 Bad Request:
+  - "La fecha de fin debe ser posterior a la fecha de inicio"
+  - "El rango de fechas no es válido"
+  - Errores de validación de modelo (campos requeridos, rangos)
+- 404 Not Found:
+  - "No se encontró la reserva con ID {id}"
+- 409 Conflict:
+  - "El turista ya tiene una reserva que se solapa en esas fechas"
+  - "No existe Turista con ID {id}" o "No existe Destino con ID {id}"
+
+========================================
+Notas de integración
+========================================
+- Calcular y mostrar el total que retorna la API; no calcular en frontend.
+- Usar formato de fecha consistente (YYYY-MM-DD) para evitar problemas de timezone.
+- Para consultas por rango, validar en UI que hasta > desde antes de llamar a la API.
+- Para UX: mostrar conflictos (409) como mensajes claros al usuario.
